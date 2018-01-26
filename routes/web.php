@@ -11,9 +11,16 @@
 |
 */
 
-Route::get('/', function () {
 
-    $prod = DB::table('products-old')->get();
 
-    return view('welcome', compact('prod'));
+Route::get('/', 'IndexController@index');
+Route::get('/{id}', 'IndexController@add');
+
+
+Route::get('/cart', function () {
+
+    return view('cart');
 });
+
+
+
