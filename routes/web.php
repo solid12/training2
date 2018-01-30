@@ -14,13 +14,9 @@
 
 
 Route::get('/', 'IndexController@index');
-Route::get('/{id}', 'IndexController@add');
-
-
-Route::get('/cart', function () {
-
-    return view('cart');
-});
+Route::get('/index', 'IndexController@index');
+Route::get('/cart', 'IndexController@cart');
+Route::get('/delete', 'IndexController@delete');
 
 
 

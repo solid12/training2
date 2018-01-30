@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel Cart Training</title>
+    <title>{{ __('Index Page') }}</title>
 
     <!-- Fonts -->
+
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -19,16 +21,15 @@
 </head>
 <body>
 
-@foreach($prod as $product):
-
+    @foreach($prod as $product):
     <ul>
+        <img src="{{ $images ? $images[0] : '' }}">
         <li>{{$product->title }}</li>
         <li>{{$product->description }}</li>
         <li>{{$product->price }}</li>
-
-        <a href="/{{$product->id}}"> {{ __('Add in Cart') }}</a>
+<a href="/index?id={{$product->id}}">{{ __('Add to Cart') }}</a>
     </ul>
-@endforeach;
-<a href="cart.php">Go to cart</a>
+    @endforeach;
+<a href="/cart">{{ __('Go Cart') }}</a>
 </body>
 </html>
