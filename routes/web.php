@@ -14,6 +14,7 @@
 Route::get('/', 'IndexController@index');
 Route::get('/index', 'IndexController@index');
 Route::get('/cart', 'IndexController@cart');
+Route::post('/cart', 'IndexController@cart');
 Route::get('/delete', 'IndexController@delete');
 
 

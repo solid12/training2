@@ -4,5 +4,7 @@
   "Cart Page": "Laravel Cart Page",
   "Go Home": "Go to Index",
   "Go Cart": "Go to Cart",
-  "Delete Product": "Remove"
+  "Delete Product": "Remove",
+  "your products": "your products from your cart are",
+  "Hello": "Hello"
 }
