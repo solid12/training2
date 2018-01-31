@@ -11,8 +11,6 @@
 |
 */
 
-
-
 Route::get('/', 'IndexController@index');
 Route::get('/index', 'IndexController@index');
 Route::get('/cart', 'IndexController@cart');
