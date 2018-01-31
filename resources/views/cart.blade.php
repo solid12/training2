@@ -27,7 +27,7 @@
     <li>{{$product->title }}</li>
     <li>{{$product->description }}</li>
     <li>{{$product->price }}</li>
-    <a href="/cart?delete={{$product->id}}">{{__('Delete Product')}}</a>
+    <a href="/cart?id={{$product->id}}">{{__('Delete Product')}}</a>
 </ul>
 @endforeach;
 <a href="/index">{{ __('Go Home') }}</a>
