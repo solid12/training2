@@ -66,6 +66,7 @@ class IndexController extends Controller
             $products = session()->get('cart', []);
 
             if (($key = array_search($idx, $products)) !== false) {
+
                 unset($products[$key]);
             }
 
