@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Cart;
 use Mail;
-use App\User;
 
 class IndexController extends Controller
 {
@@ -60,6 +59,13 @@ class IndexController extends Controller
 
     public function cart(Request $request)
     {
+
+        if (!session()->has('cart')) {
+
+            return redirect('/');
+
+        }else{
+
         if ($request->has('id')) {
 
             $idx = $request->get('id');
@@ -97,7 +103,7 @@ class IndexController extends Controller
 
             Mail::send('email.cart', $data, function ($message) {
                 $message->from('sender@domain.com', 'Laravel Training');
-                $message->to('receiver@domain.com');                
+                $message->to('receiver@domain.com');
                 $message->subject('Your Cart');
             });
 
@@ -109,7 +115,7 @@ class IndexController extends Controller
         foreach ($prod as $prods) {
             $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
         }
-
+    }
         return view('cart', compact('prod', 'images'));
     }
 

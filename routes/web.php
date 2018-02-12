@@ -15,6 +15,11 @@ Route::get('/', 'IndexController@index');
 Route::get('/index', 'IndexController@index');
 Route::get('/cart', 'IndexController@cart');
 Route::post('/cart', 'IndexController@cart');
-
-
+Route::get('/login', 'LoginController@login');
+Route::post('/login', 'LoginController@login');
+Route::get('/logout', 'LoginController@logout');
+Route::get('/products', 'ProductsController@index');
+Route::get('/delete', 'ProductController@delete');
+Route::get('/product', 'ProductController@product');
+Route::post('/product', 'ProductController@product');
 
