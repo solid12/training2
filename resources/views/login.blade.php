@@ -23,7 +23,7 @@
 
 @if (session('admin'))
     <div class="alert alert-danger">
-        {{ redirect('/products') }}
+        <meta http-equiv="refresh" content="3; url=/products" />
 
     </div>
 

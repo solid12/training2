@@ -24,7 +24,7 @@
 @if (!session('admin'))
     <div class="alert alert-danger">
 
-        {{ redirect('/') }}
+        <meta http-equiv="refresh" content="3; url=/" />
 
     </div>
 
