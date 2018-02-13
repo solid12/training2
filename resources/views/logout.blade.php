@@ -21,12 +21,6 @@
 </head>
 <body>
 
-@if (!session('admin'))
-    <div class="alert alert-danger">
-
-        <meta http-equiv="refresh" content="3; url=/" />
-
-    </div>
 
 @endif;
 

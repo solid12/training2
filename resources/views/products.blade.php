@@ -24,7 +24,7 @@
 @if (!session('admin'))
     <div class="alert alert-danger">
         {{ __('You are not logged in !') }}
-        {{ die(); }}
+        {{ die() }}
     </div>
 
 @endif;
