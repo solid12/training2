@@ -10,7 +10,6 @@ class ProductsController extends Controller
     public function index()
     {
 
-
         $prod = Cart::get();
 
         foreach ($prod as $prods) {

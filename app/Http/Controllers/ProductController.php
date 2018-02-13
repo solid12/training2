@@ -18,154 +18,135 @@ class ProductController extends Controller
         $price = '';
         $msg = '';
 
-        if ($request->has('id')) 
-        {
+        if ($request->has('id')) {
             $id = $request->get('id');
             $x = Cart::where('id', $id)->get();
 
-            foreach ($x as $y) 
-            {
+            foreach ($x as $y) {
                 $title = $y->title;
                 $description = $y->description;
                 $price = $y->price;
             }
 
-            if ($request->has('submit')) {
-                $uploadOk = false;
+        }
+        if ($request->has('submit')) {
+            $title = $request->get('title');
+            $description = $request->get('description');
+            $price = $request->get('price');
 
-                $title = $request->get('title');
-                $description = $request->get('description');
-                $price = $request->get('price');
+            $uploadOk = null;
 
-
-                if ($uploadOk === false) {
-
-                    $msg = __('Data not submited');
-
-                } else if (!isset($title) && (!$title)) {
-
-                    $msg = __('Title not set');
-
-                } else if (!isset($description) && (!$description)) {
-
-                    $msg = __('Description not set');
-
-                } else if (!isset($price)) {
-
-                    $msg = __('Price not set');
-
+            if ($request->has('fileToUpload')) {
+                $fileName = $_FILES["fileToUpload"]["name"];
+                $fileBaseName = substr($fileName, 0, strripos($fileName, '.'));
+                $file_ext = substr($fileName, strripos($fileName, '.'));
+                if ($request->has('id')) {
+                    $idx = $request->get('id');
                 } else {
-                    if ($uploadOk === true) {
+                    $adm = session()->get('admin');
+                    $idx = md5(date('Y/m/d') + $adm);
+                }
+                $newFileName = $idx . $file_ext;
 
-                        $fileBaseName = $request->file('fileToUpload')->path();
-                        $file_ext = $request->file('fileToUpload')->extension();
-                        $idx = $request->get('id');
-                        $newFileName = $idx . $file_ext;
-                        $target_file = $newFileName;
+                $target_dir = "images/";
+                $target_file = $target_dir . $newFileName;
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-                        if (!(move('images/', $target_file))) {
-                            $uploadOk = false;
-                            $msg = __('Erorr upload');
-                        }
-                    }
-
-                    if ($uploadOk === true || $uploadOk === null) {
-
-
-                        Cart::where('id', $id)->update(['title' => $title, 'description' => $description, 'price' => $price]);
-
-                        return redirect('/products');
-
+                if ($request->has('submit')) {
+                    @$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+                    if ($check !== false) {
+                        $msg = "" . __('The file is a image') . " - " . $check["mime"] . ".";
+                        $uploadOk = true;
+                    } else {
+                        $msg = __('The file not is image');
+                        $uploadOk = false;
                     }
                 }
 
+                if (file_exists($target_file)) {
+                    $msg = __('The file already exist !');
+                    $uploadOk = false;
+                } else {
+                    $uploadOk = true;
+                }
+
+                if ($_FILES["fileToUpload"]["size"] > 500000) {
+                    $msg = __('The file is large. Max. 50MB');
+                    $uploadOk = false;
+                } else {
+                    $uploadOk = true;
+                }
+
+                if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+                    $msg = __('The format not is correct !');
+                    $uploadOk = false;
+                } else {
+                    $uploadOk = true;
+                }
             }
 
-        } else {
+            if (!$request->has('id')) {
 
-            if($request->has('submit')) {
+                if (!$title) {
 
+                    $msg = __('Title not is set !');
 
-                $title = $request->get('title');
-                $description = $request->get('description');
-                $price = $request->get('price');
-                $uploadOk = false;
+                } else if (!$description) {
 
-                if ($request->hasFile('fileToUpload')) {
+                    $msg = __('Description not is set !');
 
-                    $fileBaseName = $request->file('fileToUpload')->path();
-                    $file_ext = $request->file('fileToUpload')->extension();
+                } else if (!$price) {
 
-                    $adm = session()->get('admin');
-                    $idx = md5(date('Y/m/d') + $adm);
+                    $msg = __('Price not is set !');
 
-                    $newFileName = $idx . $file_ext;
-                    $target_file = $newFileName;
-
-
-                    @$check = getimagesize($request->file('fileToUpload'));
-                    if ($check !== false) {
-                        $msg = "" . __('File is an image') . " - " . $check["mime"] . ".";
-                        $uploadOk = true;
+                } else {
+                    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                        $query = Cart::insertGetId(['title' => $title, 'description' => $description, 'price' => $price]);
+                        $idxx = "images/" . $query;
+                        $adm = session()->get('admin');
+                        $idx2 = "" . md5(date('Y/m/d') + $adm);
+                        $files = glob("images/" . $idx2 . ".{jpg,jpeg,png,gif,bmp,tiff}", GLOB_BRACE);
+                        rename("$files[0]", "$idxx.png");
+                        $msg = __('The product is added !');
                     } else {
-                        $msg = trans('file_not_img');
-                        $uploadOk = false;
+                        $msg = __('Error Upload');
                     }
+                }
+            } else {
+                if ($uploadOk === false) {
 
+                    $msg = __('Data not is submitted');
 
-                    if (file_exists("images/" . $target_file)) {
-                        $msg = __('The file already exist');
-                        $uploadOk = false;
-                    } else {
-                        $uploadOk = true;
-                    }
+                } else if (!$title) {
 
-                    if ($request->file('fileToUpload')->getClientSize() > 500000) {
-                        $msg = __('The file is large');
-                        $uploadOk = false;
-                    } else {
-                        $uploadOk = true;
-                    }
+                    $msg = __('Title not is set');
 
-                    if ($file_ext != "jpg" && $file_ext != "png" && $file_ext != "jpeg" && $file_ext != "gif") {
-                        $msg = __('The format is incorrect');
-                        $uploadOk = false;
-                    } else {
-                        $uploadOk = true;
-                    }
+                } else if (!$description) {
 
+                    $msg = __('Description not is set');
 
-                    if (!$title) {
+                } else if (!$price) {
 
-                        $msg = __('Title not set');
+                    $msg = __('Price not is set');
 
-                    } else if (!$description) {
-
-                        $msg = __('Description not set');
-
-                    } else if (!$price) {
-
-                        $msg = __('Price not set');
-
-                    } else {
-
-                        if (move('images/', $target_file)) {
-                            Cart::insert(['title' => $title, 'description' => $description, 'price' => $price]);
-                            $ix = Cart::getPdo()->lastInsertId();
-                            $adm = session()->get('admin');
-                            $idxx = "images/" . $ix . "";
-                            $idx2 = "" . md5(date('Y/m/d') + $adm);
-                            $files = glob("images/" . $idx2 . ".{jpg,jpeg,png,gif,bmp,tiff}", GLOB_BRACE);
-                            rename("$files[0]", "$idxx.png");
-                            $msg = __('Product added');
-                            return redirect('/products');
-                        } else {
+                } else {
+                    if ($uploadOk === true) {
+                        if (!move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                            $uploadOk = false;
                             $msg = __('Error Upload');
                         }
                     }
 
+                    if ($uploadOk === true || $uploadOk === null) {
+                        $id = $request->get('id');
+                        Cart::where('id', $id)->update(['title' => $title, 'description' => $description, 'price' => $price]);
+                        $msg = __('The product is updated');
+                        return redirect('/products');
+
+                    }
                 }
             }
+
         }
 
         return view('product', compact('msg', 'title', 'description', 'price'));

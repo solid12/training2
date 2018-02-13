@@ -20,6 +20,14 @@
 </head>
 <body>
 
+@if (!session('admin'))
+    <div class="alert alert-danger">
+        {{ __('You are not logged in !') }}
+        {{ die() }}
+    </div>
+
+@endif;
+
 @if($msg):
 <b style="color: white">{{$msg}}</b>
 @endif

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ __('Index Page') }}</title>
+    <title>{{ __('Login Page') }}</title>
 
     <!-- Fonts -->
 
@@ -20,6 +20,14 @@
 
 </head>
 <body>
+
+@if (session('admin'))
+    <div class="alert alert-danger">
+        {{ redirect('/products') }}
+
+    </div>
+
+@endif;
 
     <div class="container">
         <div class="row">
