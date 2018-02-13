@@ -23,6 +23,8 @@
 
 @if (session('admin'))
     <div class="alert alert-danger">
+        {{__('You are already logged in !')}}
+        {{ die() }}
         <meta http-equiv="refresh" content="3; url=/products" />
 
     </div>
