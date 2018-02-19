@@ -1,18 +1,6 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
-<head>
-
-
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <!-- Styles -->
-
-</head>
-<body>
+@include ('header')
 
 {{__("Hello")}},{{__("your products")}}: <br/>
 
@@ -25,5 +13,4 @@
 </ul>
 @endforeach;
 
-</body>
-</html>
+@include ('footer')
