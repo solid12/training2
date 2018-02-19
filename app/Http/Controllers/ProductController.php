@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use App\Cart;
+use App\Product;
 
 
 class ProductController extends Controller
 {
+
+
+
 
 
     public function product(Request $request)
@@ -20,12 +23,12 @@ class ProductController extends Controller
 
         if ($request->has('id')) {
             $id = $request->get('id');
-            $x = Cart::where('id', $id)->get();
+            $x = Product::where('id', $id)->get();
 
-            foreach ($x as $y) {
-                $title = $y->title;
-                $description = $y->description;
-                $price = $y->price;
+            foreach ($products as $product) {
+                $title = $product->title;
+                $description = $product->description;
+                $price = $product->price;
             }
 
         }
@@ -101,11 +104,11 @@ class ProductController extends Controller
 
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                        $query = Cart::insertGetId(['title' => $title, 'description' => $description, 'price' => $price]);
+                        $query = Product::insertGetId(['title' => $title, 'description' => $description, 'price' => $price]);
                         $idxx = "images/" . $query;
                         $adm = session()->get('admin');
                         $idx2 = "" . md5(date('Y/m/d') + $adm);
-                        $files = glob("images/" . $idx2 . ".{jpg,jpeg,png,gif,bmp,tiff}", GLOB_BRACE);
+                        $files = Product::getImage($idx2);
                         rename("$files[0]", "$idxx.png");
                         $msg = __('The product is added !');
                     } else {
@@ -139,7 +142,7 @@ class ProductController extends Controller
 
                     if ($uploadOk === true || $uploadOk === null) {
                         $id = $request->get('id');
-                        Cart::where('id', $id)->update(['title' => $title, 'description' => $description, 'price' => $price]);
+                        Product::where('id', $id)->update(['title' => $title, 'description' => $description, 'price' => $price]);
                         $msg = __('The product is updated');
                         return redirect('/products');
 
@@ -154,13 +157,24 @@ class ProductController extends Controller
     }
 
 
-    public function delete(Request $request)
+    public function products()
     {
 
+        $products = Product::get();
+        foreach ($products as $product) {
+            $images = Product::getImage($product->id);
+        }
+        $products = Product::orderBy('id', 'ASC')->get();
+
+        return view('products', compact('products', 'images'));
+    }
+
+    public function delete(Request $request)
+    {
+        
         if ($request->has('id')) {
             $id = $request->get('id');
-            Cart::where('id', $id)->delete();
-
+            Product::where('id', $id)->delete();
         }
 
         return view('delete');

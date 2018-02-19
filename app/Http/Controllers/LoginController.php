@@ -16,14 +16,9 @@ class LoginController extends Controller
             $usern = $request->get('user');
             $passw = $request->get('password');
 
-            if (!($usern === env('ADMIN') && $passw === env('PASSWORD'))) {
-
-
-            } else {
-
+            if (($usern === env('ADMIN') && $passw === env('PASSWORD'))) {
                 session(['admin' => $usern]);
                 return redirect('/products');
-
             }
 
         }
@@ -40,7 +35,6 @@ class LoginController extends Controller
             session()->forget('admin');
             $msg = __('You are logged out !');
 
-
         }else{
 
             $msg = __('You are already logged out !');
@@ -50,8 +44,5 @@ class LoginController extends Controller
         return view('logout', compact('msg'));
 
     }
-
-
-
 
 }

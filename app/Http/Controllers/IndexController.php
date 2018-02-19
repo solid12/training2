@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Cart;
+use App\Product;
 use Mail;
 
 class IndexController extends Controller
@@ -14,21 +13,13 @@ class IndexController extends Controller
 
     public function index(Request $request)
     {
-        if (!session()->has('cart')) {
-            $prod = Cart::all();
 
-            foreach ($prod as $prods) {
-                $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
-            }
+        if (!session()->has('cart')) {
+            $product = Product::all();
+
             if ($request->has('id')) {
                 session()->push('cart', $request->get('id'));
 
-                $cartid = session()->get('cart');
-                $prod = Cart::whereNotIn('id', $cartid)->get();
-
-                foreach ($prod as $prods) {
-                    $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
-                }
             }
 
         } else {
@@ -36,29 +27,21 @@ class IndexController extends Controller
             /** @var \Illuminate\Http\Request $request */
             if ($request->has('id')) {
                 session()->push('cart', $request->get('id'));
-
-                $cartid = session()->get('cart');
-                $prod = Cart::whereNotIn('id', $cartid)->get();
-
-                foreach ($prod as $prods) {
-                    $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
-                }
-
-            } else {
-                $cartid = session()->get('cart');
-                $prod = Cart::whereNotIn('id', $cartid)->get();
-
-                foreach ($prod as $prods) {
-                    $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
-                }
             }
         }
+        
+        $cartid = session()->get('cart');
+        $products = Product::whereNotIn('id', $cartid)->get();
+        foreach($products as $product) {
+            $images = Product::getImage($product->id);
+        }
 
-        return view('welcome', compact('prod', 'images'));
+        return view('welcome', compact('products', 'images'));
     }
 
     public function cart(Request $request)
     {
+        $cartid = session()->get('cart');
 
         if (!session()->has('cart')) {
 
@@ -67,36 +50,23 @@ class IndexController extends Controller
         }else{
 
         if ($request->has('id')) {
-
             $idx = $request->get('id');
             $products = session()->get('cart', []);
 
             if (($key = array_search($idx, $products)) !== false) {
-
                 unset($products[$key]);
             }
 
-            $cartid = session()->get('cart');
-            $prod = Cart::whereIn('id', $cartid)->get();
-
-            foreach ($prod as $prods) {
-                $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
-            }
         }
 
         if ($request->has('send')) {
-            $cartid = session()->get('cart');
-
-            $prod = Cart::whereIn('id', $cartid)->get();
-
-            foreach ($prod as $prods) {
-                $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
+            $products = Product::whereIn('id', $cartid)->get();
+            foreach($products as $product) {
+                $images = Product::getImage($product->id);
             }
-
             $protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === true ? 'https://' : 'http://';
-
             $data = [
-                'prod' => $prod,
+                'product' => $product,
                 'images' => $images,
                 'protocol' => $protocol
             ];
@@ -109,14 +79,13 @@ class IndexController extends Controller
 
         }
 
-        $cartid = session()->get('cart');
-        $prod = Cart::whereIn('id', $cartid)->get();
-
-        foreach ($prod as $prods) {
-            $images = glob('images/' . $prods->id . '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
         }
-    }
-        return view('cart', compact('prod', 'images'));
+        $products = Product::whereIn('id', $cartid)->get();
+        foreach($products as $product) {
+            $images = Product::getImage($product->id);
+        }
+
+        return view('cart', compact('products', 'images'));
     }
 
 

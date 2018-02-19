@@ -1,7 +1,11 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>{{ __('Product Page') }}</title>
+
+    <!-- Fonts -->
 
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
@@ -13,17 +17,3 @@
 
 </head>
 <body>
-
-{{__("Hello")}},{{__("your products")}}: <br/>
-
-@foreach($products as $product)
-<ul>
-    <img width="120" src="{{$protocol }}{{$_SERVER['HTTP_HOST']}}/{{ $images ? $images[0] : '' }}">
-    <li style='padding: 3px'>{{__("Title Product") }}: {{$product->title }}</li>
-    <li style='padding: 3px'>{{__("Description Product") }}: {{$product->description }}</li>
-    <li style='padding: 3px'>{{__("Price Product") }}: {{$product->price }}</li>
-</ul>
-@endforeach;
-
-</body>
-</html>
