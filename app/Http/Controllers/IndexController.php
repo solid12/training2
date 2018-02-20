@@ -15,11 +15,10 @@ class IndexController extends Controller
     {
 
         if (!session()->has('cart')) {
-            $product = Product::all();
+            $products = Product::all();
 
             if ($request->has('id')) {
                 session()->push('cart', $request->get('id'));
-
             }
 
         } else {

@@ -10,10 +10,6 @@ use App\Product;
 class ProductController extends Controller
 {
 
-
-
-
-
     public function product(Request $request)
     {
         $title = '';
@@ -155,7 +151,6 @@ class ProductController extends Controller
         return view('product', compact('msg', 'title', 'description', 'price'));
 
     }
-
 
     public function products()
     {
