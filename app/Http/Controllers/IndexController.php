@@ -15,7 +15,11 @@ class IndexController extends Controller
     {
 
         if (!session()->has('cart')) {
-            $products = Product::all();
+
+            $products = Product::get();
+            foreach($products as $product) {
+                $images = Product::getImage($product->id);
+            }
 
             if ($request->has('id')) {
                 session()->push('cart', $request->get('id'));
@@ -27,13 +31,14 @@ class IndexController extends Controller
             if ($request->has('id')) {
                 session()->push('cart', $request->get('id'));
             }
+            $cartid = session()->get('cart');
+            $products = Product::whereNotIn('id', $cartid)->get();
+            foreach($products as $product) {
+                $images = Product::getImage($product->id);
+            }
         }
-        
-        $cartid = session()->get('cart');
-        $products = Product::whereNotIn('id', $cartid)->get();
-        foreach($products as $product) {
-            $images = Product::getImage($product->id);
-        }
+
+
 
         return view('welcome', compact('products', 'images'));
     }
