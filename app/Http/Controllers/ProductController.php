@@ -9,6 +9,12 @@ use App\Product;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        if (!session('admin')) {
+            throw new \Exception('Unaothorized');
+        }
+    }
 
     public function product(Request $request)
     {

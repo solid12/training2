@@ -12,15 +12,13 @@ class LoginController extends Controller
 
         /** @var \Illuminate\Http\Request $request */
         if ($request->has('submit')) {
+            $username = $request->get('user');
+            $password = $request->get('password');
 
-            $usern = $request->get('user');
-            $passw = $request->get('password');
-
-            if (($usern === env('ADMIN') && $passw === env('PASSWORD'))) {
-                session(['admin' => $usern]);
+            if (($username === env('ADMIN') && $password === env('PASSWORD'))) {
+                session(['admin' => $username]);
                 return redirect('/products');
             }
-
         }
 
         return view('login');
