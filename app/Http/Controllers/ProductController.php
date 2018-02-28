@@ -12,7 +12,7 @@ class ProductController extends Controller
     public function __construct()
     {
         if (!session('admin')) {
-            throw new \Exception('Unaothorized');
+            throw new \Exception('Unauthorized');
         }
     }
 
