@@ -177,6 +177,7 @@ class ProductController extends Controller
         if ($request->has('id')) {
             $id = $request->get('id');
             Product::where('id', $id)->delete();
+            // TODO: unlink image as well
         }
 
         return view('delete');
