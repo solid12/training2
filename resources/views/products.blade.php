@@ -5,7 +5,7 @@
 @foreach($products as $product)
 
     <ul>
-        <img src="{{ $images ? $images[0] : '' }}">
+        <img src="{{ $product->getImage() }}">
         <li>{{$product->title }}</li>
         <li>{{$product->description }}</li>
         <li>{{$product->price }}</li>

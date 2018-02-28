@@ -9,7 +9,7 @@ use App\Product;
 
 class ProductController extends Controller
 {
-    public function __construct()
+    public function checkLogin()
     {
         if (!session('admin')) {
             throw new \Exception('Unauthorized');
@@ -18,6 +18,8 @@ class ProductController extends Controller
 
     public function product(Request $request)
     {
+        $this->checkLogin();
+
         $title = '';
         $description = '';
         $price = '';
@@ -160,11 +162,9 @@ class ProductController extends Controller
 
     public function products()
     {
+        $this->checkLogin();
 
         $products = Product::get();
-        foreach ($products as $product) {
-            $images = Product::getImage($product->id);
-        }
         $products = Product::orderBy('id', 'ASC')->get();
 
         return view('products', compact('products', 'images'));
@@ -172,7 +172,8 @@ class ProductController extends Controller
 
     public function delete(Request $request)
     {
-        
+        $this->checkLogin();
+
         if ($request->has('id')) {
             $id = $request->get('id');
             Product::where('id', $id)->delete();

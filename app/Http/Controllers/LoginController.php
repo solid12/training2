@@ -9,7 +9,6 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-
         /** @var \Illuminate\Http\Request $request */
         if ($request->has('submit')) {
             $username = $request->get('user');
