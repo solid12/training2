@@ -4,7 +4,7 @@
 
 @foreach($products as $product)
 <ul>
-    <img src="{{ $images ? $images[0] : '' }}">
+    <img src="{{ $product->getImage() }}">
     <li>{{$product->title }}</li>
     <li>{{$product->description }}</li>
     <li>{{$product->price }}</li>
@@ -19,7 +19,7 @@
     <input type="name" name="name" placeholder="{{ __("Name") }}" autocomplete="off" required="required"/>
     <input type="email" name="contact" placeholder="{{ __("Contact Details") }}" autocomplete="off"
            required="required"/>
-    <textarea rows="4" cols="30" name="comment" form="cart">{{ __("Comments") }}</textarea>
+    <textarea rows="4" cols="30" name="comment" placeholder="{{ __("Comments") }}"></textarea>
     <input type="submit" name="send" class="btn btn-success pull-right" value="{{ __("Checkout") }}"> </input>
 </form>
 

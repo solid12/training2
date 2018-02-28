@@ -19,7 +19,7 @@ class ProductController extends Controller
 
         if ($request->has('id')) {
             $id = $request->get('id');
-            $x = Product::where('id', $id)->get();
+            $products = Product::where('id', $id)->get();
 
             foreach ($products as $product) {
                 $title = $product->title;

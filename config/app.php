@@ -230,4 +230,7 @@ return [
 
     ],
 
+    'sender' => env('EMAIL_SENDER', ''),
+    'receiver' => env('EMAIL_RECEIVER', '')
+
 ];

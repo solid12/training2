@@ -13,77 +13,65 @@ class IndexController extends Controller
 
     public function index(Request $request)
     {
-
-        if (!session()->has('cart')) {
-
-            $products = Product::get();
-            foreach ($products as $product) {
-                $images = Product::getImage($product->id);
-            }
-
-            if ($request->has('id')) {
-                session()->push('cart', $request->get('id'));
-            }
-
-        } else {
-
-            /** @var \Illuminate\Http\Request $request */
-            if ($request->has('id')) {
-                session()->push('cart', $request->get('id'));
-            }
-            $cartid = session()->get('cart');
-            $products = Product::whereNotIn('id', $cartid)->get();
-            foreach ($products as $product) {
-                $images = Product::getImage($product->id);
-            }
+        /** @var \Illuminate\Http\Request $request */
+        if ($request->has('id')) {
+            session()->push('cart', $request->get('id'));
         }
 
-        return view('welcome', compact('products', 'images'));
+        if (!session()->has('cart')) {
+            $products = Product::get();
+        } else {
+            $products = Product::whereNotIn('id', session()->get('cart'))->get();
+        }
+
+        return view('index', compact('products', 'images'));
     }
 
     public function cart(Request $request)
     {
-        $cartid = session()->get('cart');
-
-        if (!session()->has('cart')) {
-
+        if (!session()->has('cart') || !count(session()->get('cart'))) {
             return redirect('/');
+        }
 
-        } else {
+        $cart = session()->get('cart', []);
 
-            if ($request->has('id')) {
-                $idx = $request->get('id');
-                $products = session()->get('cart', []);
-
-                if (($key = array_search($idx, $products)) !== false) {
-                    unset($products[$key]);
-                }
-
+        if (($idx = $request->has('id')) && is_numeric($idx = $request->get('id'))) {
+            if (($key = array_search($idx, $cart)) !== false) {
+                unset($cart[$key]);
             }
 
-            if ($request->has('send')) {
-                $products = Product::whereIn('id', $cartid)->get();
-                foreach ($products as $product) {
-                    $images = Product::getImage($product->id);
-                }
-                $protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === true ? 'https://' : 'http://';
-                $data = [
-                    'product' => $product,
-                    'images' => $images,
-                    'protocol' => $protocol
-                ];
+            session()->put('cart', $cart);
 
-                Mail::send('email.cart', $data, function ($message) {
-                    $message->from('sender@domain.com', 'Laravel Training');
-                    $message->to('receiver@domain.com');
-                    $message->subject('Your Cart');
-                });
-
+            if (!count($cart)) {
+                return redirect('/');
             }
         }
-        $products = Product::whereIn('id', $cartid)->get();
+
+        if ($request->has('send')) {
+            $products = Product::whereIn('id', $cart)->get();
+            $protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === true ? 'https://' : 'http://';
+            $data = [
+                'products' => $products,
+                'protocol' => $protocol,
+                'name' => $request->input('name'),
+                'contact' => $request->input('contact'),
+                'comment' => $request->input('comment'),
+            ];
+
+            Mail::send('email.cart', $data, function ($message) {
+                $message->from(config('app.sender'));
+                $message->to(config('app.receiver'));
+                $message->subject(__('Your Cart'));
+            });
+
+            session()->put('cart', []);
+
+            return redirect('/');
+        }
+
+        $products = Product::whereIn('id', $cart)->get();
         foreach ($products as $product) {
-            $images = Product::getImage($product->id);
+            $images = $product->getImage();
         }
 
         return view('cart', compact('products', 'images'));

@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    public static function getImage($id)
+    public function getImage()
     {
-        $image = glob('images/' .$id. '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
-        return $image;
+        $images = glob('images/' .$this->getKey(). '.{jpg,jpeg,png,gif,bmp,tiff}', GLOB_BRACE);
+        return count($images) ? $images[0] : null;
     }
 }
