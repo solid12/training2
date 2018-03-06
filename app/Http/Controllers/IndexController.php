@@ -70,11 +70,8 @@ class IndexController extends Controller
         }
 
         $products = Product::whereIn('id', $cart)->get();
-        foreach ($products as $product) {
-            $images = getImage($product->id);
-        }
 
-        return view('cart', compact('products', 'images'));
+        return view('cart', compact('products'));
     }
 
 }
