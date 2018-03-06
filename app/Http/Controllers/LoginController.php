@@ -21,16 +21,14 @@ class LoginController extends Controller
         }
 
         return view('login');
-
     }
 
     public function logout()
     {
-        if(session()->has('admin'))
-        {
+        if (session()->has('admin')) {
             session()->forget('admin');
             $msg = __('You are logged out !');
-        }else{
+        } else {
             $msg = __('You are already logged out !');
         }
 
