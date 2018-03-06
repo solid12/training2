@@ -1,9 +1,11 @@
 <!doctype html>
 @include ('header')
-
+<?php
+/** @var \App\Product $product */
+?>
     @foreach($products as $product):
     <ul>
-        <img src="{{ $product->getImage() }}">
+        <img src="<?= $product->getImage($product->id) ?>">
         <li>{{$product->title }}</li>
         <li>{{$product->description }}</li>
         <li>{{$product->price }}</li>

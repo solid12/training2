@@ -24,7 +24,7 @@ class IndexController extends Controller
             $products = Product::whereNotIn('id', session()->get('cart'))->get();
         }
 
-        return view('index', compact('products', 'images'));
+        return view('index', compact('products'));
     }
 
     public function cart(Request $request)
@@ -71,7 +71,7 @@ class IndexController extends Controller
 
         $products = Product::whereIn('id', $cart)->get();
         foreach ($products as $product) {
-            $images = $product->getImage();
+            $images = getImage($product->id);
         }
 
         return view('cart', compact('products', 'images'));
