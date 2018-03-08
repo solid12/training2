@@ -8,25 +8,14 @@ use App\Product;
 
 class ProductController extends Controller
 {
-    public function checkLogin()
-    {
-        if (!session('admin')) {
-            throw new \Exception('Unauthorized');
-        }
-    }
-
     public function product(Request $request)
     {
-        $this->checkLogin();
-
         $msg = '';
-        $idx = $request->get('id');
 
         $product = new Product();
         if ($request->has('id')) {
             $id = $request->get('id');
             $product = Product::find($id);
-
         }
 
         if ($request->has('submit')) {
@@ -128,8 +117,6 @@ class ProductController extends Controller
 
     public function products()
     {
-        $this->checkLogin();
-
         $products = Product::orderBy('id', 'ASC')->get();
 
         return view('products', compact('products'));
@@ -137,8 +124,6 @@ class ProductController extends Controller
 
     public function delete(Request $request)
     {
-        $this->checkLogin();
-
         if (($id = $request->has('id')) && ($id = $request->get('id'))) {
             $product = Product::find($id);
             $product->delete();

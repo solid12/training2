@@ -15,11 +15,16 @@ Route::get('/', 'IndexController@index');
 Route::get('/index', 'IndexController@index');
 Route::get('/cart', 'IndexController@cart');
 Route::post('/cart', 'IndexController@cart');
+
 Route::get('/login', 'LoginController@login');
 Route::post('/login', 'LoginController@login');
 Route::get('/logout', 'LoginController@logout');
-Route::get('/products', 'ProductController@products');
-Route::get('/delete', 'ProductController@delete');
-Route::get('/product', 'ProductController@product');
-Route::post('/product', 'ProductController@product');
+
+Route::group(['middleware' => ['check.admin']], function ($router) {
+    /** @var \Illuminate\Routing\Router $router */
+    $router->get('/products', 'ProductController@products');
+    $router->get('/delete', 'ProductController@delete');
+    $router->get('/product', 'ProductController@product');
+    $router->post('/product', 'ProductController@product');
+});
 
