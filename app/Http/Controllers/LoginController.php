@@ -16,7 +16,15 @@ class LoginController extends Controller
 
             if (($username === env('ADMIN') && $password === env('PASSWORD'))) {
                 session(['admin' => $username]);
-                return redirect('/products');
+                if ($request->ajax()) {
+                    return ['success' => true];
+                } else {
+                    return redirect('/products');
+                }
+            } else {
+                if ($request->ajax()) {
+                    return ['success' => false, 'message' => __('Incorrect credentials')];
+                }
             }
         }
 

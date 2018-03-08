@@ -14,4 +14,15 @@ class Product extends Model
 
     public $timestamps = false;
 
+    /**
+     * @inheritdoc
+     */
+    public function toArray()
+    {
+        $result = parent::toArray();
+        $result['image'] = $this->getImage($this->getKey());
+
+        return $result;
+    }
+
 }

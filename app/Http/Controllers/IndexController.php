@@ -11,6 +11,16 @@ use Mail;
 class IndexController extends Controller
 {
 
+    public function spa(Request $request)
+    {
+        return view('spa');
+    }
+
+    public function token(Request $request)
+    {
+        return csrf_token();
+    }
+
     public function index(Request $request)
     {
         /** @var \Illuminate\Http\Request $request */
@@ -24,13 +34,21 @@ class IndexController extends Controller
             $products = Product::whereNotIn('id', session()->get('cart'))->get();
         }
 
-        return view('index', compact('products'));
+        if ($request->ajax()) {
+            return $products;
+        } else {
+            return view('index', compact('products'));
+        }
     }
 
     public function cart(Request $request)
     {
         if (!session()->has('cart') || !count(session()->get('cart'))) {
-            return redirect('/');
+            if ($request->ajax()) {
+                return [];
+            } else {
+                return redirect('/');
+            }
         }
 
         $cart = session()->get('cart', []);
@@ -43,7 +61,11 @@ class IndexController extends Controller
             session()->put('cart', $cart);
 
             if (!count($cart)) {
-                return redirect('/');
+                if ($request->ajax()) {
+                    return [];
+                } else {
+                    return redirect('/');
+                }
             }
         }
 
@@ -71,7 +93,12 @@ class IndexController extends Controller
 
         $products = Product::whereIn('id', $cart)->get();
 
-        return view('cart', compact('products'));
+
+        if ($request->ajax()) {
+            return $products;
+        } else {
+            return view('cart', compact('products'));
+        }
     }
 
 }
