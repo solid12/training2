@@ -15,7 +15,7 @@ class ProductController extends Controller
         $product = new Product();
         if ($request->has('id')) {
             $id = $request->get('id');
-            $product = Product::find($id);
+            $product = Product::query()->find($id);
         }
 
         if ($request->has('submit')) {
@@ -27,21 +27,20 @@ class ProductController extends Controller
             if ($request->hasFile('fileToUpload')) {
 
                 $file = $request->file('fileToUpload');
-                $admin_session = session()->get('admin');
-                $file_ext = $file->getClientOriginalExtension();
-                $idx2 = md5(date('Y/m/d') + $admin_session);
-                $newFileName = $idx2 . "." . $file_ext;
-                $target_file = "images/" . $newFileName;
+                $fileExt = $file->getClientOriginalExtension();
+                $temporaryFileName = time();
+                $newFileName = $temporaryFileName . "." . $fileExt;
+                $targetPath = "images/" . $newFileName;
                 @$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 
                 $uploadOk = false;
                 if ($check == true) {
                     $msg = __('The file is a image') . " - " . $check["mime"] . ".";
-                    if (file_exists($target_file)) {
+                    if (file_exists($targetPath)) {
                         if ($_FILES["fileToUpload"]["size"] > 500000) {
                             $msg = __('The file is large. Max. 50MB');
                         } else {
-                            if (in_array($file_ext, ['.jpg', '.jpeg', '.png', '.gif'])) {
+                            if (in_array($fileExt, ['.jpg', '.jpeg', '.png', '.gif'])) {
                                 $msg = __('The format not is correct !');
                             }
                         }
@@ -52,6 +51,7 @@ class ProductController extends Controller
                     $msg = __('The file not is image');
                 }
             }
+
             if (!$request->has('id')) {
 
                 if (!$title) {
@@ -62,15 +62,14 @@ class ProductController extends Controller
                     $msg = __('Price not is set !');
                 } else {
 
-                    if (isset($target_file) && move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                    if (isset($targetPath) && move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetPath)) {
                         $product->title = $title;
                         $product->description = $description;
                         $product->price = $price;
                         $product->save();
 
-                        $idxx = "images/" . $product->id;
-                        $new_name = $idxx . "." . $file_ext;
-                        rename("images/$newFileName", "$new_name");
+                        $newName = "images/" . $product->id . "." . $fileExt;
+                        rename("images/$newFileName", $newName);
                         header("Refresh: 3;url=/products");
                         $msg = __('The product is added.');
                     } else {
@@ -90,10 +89,10 @@ class ProductController extends Controller
                 } else {
 
                     if ($uploadOk === true) {
-                        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetPath)) {
                             $idxx = "images/" . $product->id;
-                            $new_name = $idxx . "." . $file_ext;
-                            rename("images/$newFileName", "$new_name");
+                            $newName = $idxx . "." . $fileExt;
+                            rename("images/$newFileName", "$newName");
                             $msg = __('The product is added.');
                         }
                     }
