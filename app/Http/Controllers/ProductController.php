@@ -102,23 +102,34 @@ class ProductController extends Controller
                         $product->description = $description;
                         $product->price = $price;
                         $product->save();
-                        header("Refresh: 3;url=/products");
-                        $msg = __('The product is updated.');
+                        if ($request->ajax()) {
+                            return ['success' => true];
+                        } else {
+                            header("Refresh: 3;url=/products");
+                            $msg = __('The product is updated.');
+                        }
                     } else {
                         $msg = __('Error Update !');
                     }
                 }
             }
         }
-        return view('product', compact('msg', 'product'));
+        if($request->ajax()){
+            return $product;
+        }else {
+            return view('product', compact('msg', 'product'));
+        }
 
     }
 
-    public function products()
+    public function products(Request $request)
     {
         $products = Product::orderBy('id', 'ASC')->get();
-
+    if($request->ajax()){
+        return $products;
+    }else {
         return view('products', compact('products'));
+        }
     }
 
     public function delete(Request $request)

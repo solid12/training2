@@ -16,7 +16,11 @@ class CheckAdmin
     public function handle($request, Closure $next)
     {
         if (!session('admin')) {
-            throw new \Exception('Unauthorized');
+            if ($request->ajax()) {
+                return ['success' => false, 'message' => __('You are not logged in !')];
+            }else {
+                throw new \Exception('Unauthorized');
+            }
         }
 
         return $next($request);

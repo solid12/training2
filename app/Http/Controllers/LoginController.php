@@ -31,6 +31,18 @@ class LoginController extends Controller
         return view('login');
     }
 
+    public function isAdmin(){
+
+        if (session('admin')) {
+            return $admin = 1;
+        }else{
+            return $admin = 0;
+        }
+
+
+
+    }
+
     public function logout()
     {
         if (session()->has('admin')) {

@@ -22,6 +22,7 @@ Route::post('/cart', 'IndexController@cart');
 Route::get('/login', 'LoginController@login');
 Route::post('/login', 'LoginController@login');
 Route::get('/logout', 'LoginController@logout');
+Route::get('/check', 'LoginController@isAdmin');
 
 Route::group(['middleware' => ['check.admin']], function ($router) {
     /** @var \Illuminate\Routing\Router $router */

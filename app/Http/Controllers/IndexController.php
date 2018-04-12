@@ -27,7 +27,6 @@ class IndexController extends Controller
         if ($request->has('id')) {
             session()->push('cart', $request->get('id'));
         }
-
         if (!session()->has('cart')) {
             $products = Product::get();
         } else {
@@ -47,6 +46,7 @@ class IndexController extends Controller
             if ($request->ajax()) {
                 return [];
             } else {
+
                 return redirect('/');
             }
         }
@@ -88,7 +88,11 @@ class IndexController extends Controller
 
             session()->put('cart', []);
 
-            return redirect('/');
+            if (!$request->ajax()) {
+                return redirect('/');
+            }else{
+                return ['success' => true];
+            }
         }
 
         $products = Product::whereIn('id', $cart)->get();
