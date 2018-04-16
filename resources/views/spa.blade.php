@@ -17,7 +17,6 @@
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <!-- Styles -->
 
-
     <!-- Load the jQuery JS library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -50,7 +49,7 @@
                                 '<li>' + product.title + '</li>',
                                 '<li>' + product.description + '</li>',
                                 '<li>' + product.price + '</li>',
-                                '<button class="add" data-id="' + product.id + '" >{{ __('Add to Cart') }}</button>',
+                                '<a class="add" data-id="' + product.id + '" >{{ __('Add to Cart') }}</a>',
                                 '</ul>'
                             ].join('');
                         });
@@ -68,7 +67,7 @@
                                 '<li>' + product.title + '</li>',
                                 '<li>' + product.description + '</li>',
                                 '<li>' + product.price + '</li>',
-                                '<a href="#edit"><button class="editbutton" data-id="' + product.id + '" >{{ __('Edit Product') }}</button></a> | <button class="delete" data-id="' + product.id + '" >{{ __('Delete Product') }}</button>',
+                                '<a href="#edit" class="editbutton" data-id="' + product.id + '">{{ __('Edit Product') }}</a> | <a class="delete" data-id="' + product.id + '" >{{ __('Delete Product') }}</a>',
                                 '</ul>'
                             ].join('');
                         });
@@ -86,7 +85,7 @@
                                 '<li>' + product.title + '</li>',
                                 '<li>' + product.description + '</li>',
                                 '<li>' + product.price + '</li>',
-                                '<button class="remove" data-id="' + product.id + '" >{{ __('Remove Product') }}</button>',
+                                '<a class="remove" data-id="' + product.id + '" >{{ __('Remove Product') }}</a>',
                                 '</ul>'
                             ].join('');
                         });
@@ -171,7 +170,6 @@
                                             // Render the products in the cart list
                                             $('.products .list').html(renderListproducts(response));
                                             $(".delete").click(function (e) {
-                                                e.preventDefault();
                                                 var id = $(this).attr("data-id");
                                                 $.ajax({
                                                     type: "GET",
@@ -190,7 +188,6 @@
                                     });
 
                                     $(document).on("click", ".editbutton", function (e) {
-                                        e.preventDefault();
                                         var id = $(this).attr("data-id");
                                         $.ajax({
                                             type: "GET",
@@ -457,10 +454,8 @@
     <!-- The cart element where the products list is rendered -->
     <div class="list"></div>
     <br/>
-    <a href="#add">
-        <button class="addbutton">{{__('Add Product')}}</button>
-    </a><br/>
-    <button class="logout">{{__('Logout')}}</button>
+    <a href="#add" class="addbutton">{{__('Add Product')}}</a><br/>
+    <a class="logout">{{__('Logout')}}</a>
 </div>
 
 <div class="page edit">
