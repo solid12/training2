@@ -32,22 +32,22 @@ class LoginController extends Controller
     }
 
     public function isAdmin(){
-
         if (session('admin')) {
-            return $admin = 1;
-        }else{
-            return $admin = 0;
+            return 1;
+        } else {
+            return 0;
         }
-
-
-
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         if (session()->has('admin')) {
             session()->forget('admin');
-            $msg = __('You are logged out !');
+            if($request->ajax()) {
+                return ['success' => true];
+            }else{
+                $msg = __('You are logged out !');
+            }
         } else {
             $msg = __('You are already logged out !');
         }
