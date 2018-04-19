@@ -137,18 +137,19 @@ class ProductController extends Controller
                 } else {
 
                     if ($uploadOk === true) {
-                        if (isset($targetPath) && move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetPath)) {
-                            foreach (glob("images/".$product->id.".*") as $filename) {
+                        if (isset($targetPath)) {
+                            foreach (glob("images/" . $product->id . ".*") as $filename) {
                                 unlink($filename);
                             }
-
-                            $idxx = "images/" . $product->id;
-                            $newName = $idxx . "." . $fileExt;
-                            rename("images/$newFileName", "$newName");
-                            if ($request->ajax()) {
-                                return ['error' => 0];
-                            } else {
-                                $msg = __('The product is added.');
+                            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $targetPath)) {
+                                $idxx = "images/" . $product->id;
+                                $newName = $idxx . "." . $fileExt;
+                                rename("images/$newFileName", "$newName");
+                                if ($request->ajax()) {
+                                    return ['error' => 0];
+                                } else {
+                                    $msg = __('The product is added.');
+                                }
                             }
                         }
                     }

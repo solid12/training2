@@ -25,4 +25,10 @@ class Product extends Model
         return $result;
     }
 
+    public function product()
+    {
+        return $this->hasOne('App\Category');
+    }
+
+
 }

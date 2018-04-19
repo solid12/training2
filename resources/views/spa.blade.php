@@ -275,7 +275,7 @@
                         });
                     });
 
-                    $('.edit [type=submit]').click(function () {
+                    $('.edit .js-formedit [type=submit]').click(function () {
                         $.ajax('/token', {
                             success: function (response) {
                                 var idedit = $('.editbutton').attr("data-id");
@@ -287,6 +287,7 @@
                                     url: '/product?id=' + idedit,
                                     type: 'POST',
                                     data: formData,
+                                    encType: 'multipart/form-data',
                                     cache: false,
                                     dataType: 'json',
                                     contentType: false,
